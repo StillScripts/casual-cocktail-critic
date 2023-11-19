@@ -17,7 +17,7 @@ export const FormContainer = ({
   description,
   children,
 }: FormContainerProps) => (
-  <Card>
+  <Card className="mx-auto max-w-2xl">
     <CardHeader>
       <CardTitle>{title}</CardTitle>
       {description && <CardDescription>{description}</CardDescription>}
