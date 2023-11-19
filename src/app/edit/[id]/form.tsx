@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
+import { CaretSortIcon, CheckIcon, Cross1Icon } from "@radix-ui/react-icons";
 import { useFieldArray, useForm } from "react-hook-form";
 import * as z from "zod";
 
@@ -60,13 +60,16 @@ const recipeFormSchema = z.object({
     .max(30, {
       message: "Name must not be longer than 30 characters.",
     }),
+  description: z.string(),
   language: z.string({
     required_error: "Please select a language.",
   }),
-  urls: z
+  ingredients: z
     .array(
       z.object({
-        value: z.string().url({ message: "Please enter a valid URL." }),
+        // value would be the id of the ingredient
+        value: z.string(),
+        quantity: z.string(),
       }),
     )
     .optional(),
@@ -80,8 +83,8 @@ export function EditRecipeForm({ name }: { name: string }) {
     defaultValues: { name },
   });
 
-  const { fields, append } = useFieldArray({
-    name: "urls",
+  const { fields, append, remove } = useFieldArray({
+    name: "ingredients",
     control: form.control,
   });
 
@@ -122,78 +125,121 @@ export function EditRecipeForm({ name }: { name: string }) {
 
           <div>
             {fields.map((field, index) => (
-              <FormField
-                key={field.id}
-                control={form.control}
-                name="language"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel className={cn(index !== 0 && "sr-only")}>
-                      Cocktail Ingredients
-                    </FormLabel>
-                    <FormDescription className={cn(index !== 0 && "sr-only")}>
-                      Add ingredients to your list
-                    </FormDescription>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant="outline"
-                            role="combobox"
-                            className={cn(
-                              "w-full justify-between",
-                              !field.value && "text-muted-foreground",
-                            )}
-                          >
-                            {field.value
-                              ? languages.find(
-                                  (language) => language.value === field.value,
-                                )?.label
-                              : "Select ingredient"}
-                            <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-[200px] p-0">
-                        <Command>
-                          <CommandInput placeholder="Search language..." />
-                          <CommandEmpty>No language found.</CommandEmpty>
-                          <CommandGroup>
-                            {languages.map((language) => (
-                              <CommandItem
-                                value={language.label}
-                                key={language.value}
-                                onSelect={() => {
-                                  form.setValue("language", language.value);
-                                }}
-                              >
-                                <CheckIcon
-                                  className={cn(
-                                    "mr-2 h-4 w-4",
-                                    language.value === field.value
-                                      ? "opacity-100"
-                                      : "opacity-0",
-                                  )}
-                                />
-                                {language.label}
-                              </CommandItem>
-                            ))}
-                          </CommandGroup>
-                        </Command>
-                      </PopoverContent>
-                    </Popover>
+              <div className="grid grid-cols-5 gap-3" key={field.id}>
+                <FormField
+                  control={form.control}
+                  name={`ingredients.${index}.value`}
+                  render={({ field }) => (
+                    <FormItem className="col-span-3">
+                      <FormLabel className={cn(index !== 0 && "sr-only")}>
+                        Cocktail Ingredients
+                      </FormLabel>
+                      <FormDescription className={cn(index !== 0 && "sr-only")}>
+                        Name of each ingredient
+                      </FormDescription>
+                      <FormControl>
+                        <Input {...field} placeholder="Vanilla Vodka" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                    // TODO maybe we can use the combobox...
+                    // <FormItem className="flex flex-col">
+                    //   <FormLabel className={cn(index !== 0 && "sr-only")}>
+                    //     Cocktail Ingredients
+                    //   </FormLabel>
+                    //   <FormDescription className={cn(index !== 0 && "sr-only")}>
+                    //     Add ingredients to your list
+                    //   </FormDescription>
+                    //   <Popover>
+                    //     <PopoverTrigger asChild>
+                    //       <FormControl>
+                    //         <Button
+                    //           variant="outline"
+                    //           role="combobox"
+                    //           className={cn(
+                    //             "w-full justify-between",
+                    //             !field.value && "text-muted-foreground",
+                    //           )}
+                    //         >
+                    //           {field.value
+                    //             ? languages.find(
+                    //                 (language) => language.value === field.value,
+                    //               )?.label
+                    //             : "Select ingredient"}
+                    //           <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    //         </Button>
+                    //       </FormControl>
+                    //     </PopoverTrigger>
+                    //     <PopoverContent className="w-[200px] p-0">
+                    //       <Command>
+                    //         <CommandInput placeholder="Search language..." />
+                    //         <CommandEmpty>No language found.</CommandEmpty>
+                    //         <CommandGroup>
+                    //           {languages.map((language) => (
+                    //             <CommandItem
+                    //               value={language.label}
+                    //               key={language.value}
+                    //               onSelect={() => {
+                    //                 form.setValue("language", language.value);
+                    //               }}
+                    //             >
+                    //               <CheckIcon
+                    //                 className={cn(
+                    //                   "mr-2 h-4 w-4",
+                    //                   language.value === field.value
+                    //                     ? "opacity-100"
+                    //                     : "opacity-0",
+                    //                 )}
+                    //               />
+                    //               {language.label}
+                    //             </CommandItem>
+                    //           ))}
+                    //         </CommandGroup>
+                    //       </Command>
+                    //     </PopoverContent>
+                    //   </Popover>
 
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                    //   <FormMessage />
+                    // </FormItem>
+                  )}
+                />
+                <div className="col-span-2 flex items-end space-x-2">
+                  <FormField
+                    control={form.control}
+                    name={`ingredients.${index}.quantity`}
+                    render={({ field }) => (
+                      <FormItem className="w-full">
+                        <FormLabel className={cn(index !== 0 && "sr-only")}>
+                          Quantity
+                        </FormLabel>
+                        <FormDescription
+                          className={cn(index !== 0 && "sr-only")}
+                        >
+                          Quantity of each ingredient
+                        </FormDescription>
+                        <FormControl>
+                          <Input {...field} placeholder="1 ounce" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <Button
+                    className="text-red-600 hover:text-red-700"
+                    variant="ghost"
+                    onClick={() => remove(index)}
+                  >
+                    <Cross1Icon />
+                  </Button>
+                </div>
+              </div>
             ))}
             <Button
               type="button"
               variant="outline"
               size="sm"
               className="mt-2"
-              onClick={() => append({ value: "" })}
+              onClick={() => append({ value: "", quantity: "" })}
             >
               Add Ingredient
             </Button>
