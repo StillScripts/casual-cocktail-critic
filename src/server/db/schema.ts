@@ -39,6 +39,33 @@ export const recipes = mysqlTable(
   }),
 );
 
+export const recipeIngredients = mysqlTable(
+  "recipe_ingredient",
+  {
+    id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
+    name: varchar("name", { length: 256 }),
+    quantity: varchar("quantity", { length: 100 }),
+    recipeId: int("recipeId").notNull(),
+  },
+  (example) => ({
+    recipeIndex: index("recipe_idx").on(example.recipeId),
+  }),
+);
+
+export const recipeRelations = relations(recipes, ({ many }) => ({
+  recipeIngredients: many(recipeIngredients),
+}));
+
+export const recipeIngredientsRelations = relations(
+  recipeIngredients,
+  ({ one }) => ({
+    recipes: one(recipes, {
+      fields: [recipeIngredients.recipeId],
+      references: [recipes.id],
+    }),
+  }),
+);
+
 export const ingredients = mysqlTable(
   "ingredient",
   {
@@ -50,26 +77,13 @@ export const ingredients = mysqlTable(
   }),
 );
 
-export const recipeIngredients = mysqlTable(
-  "recipe_ingredient",
-  {
-    recipeId: bigint("recipeId", { mode: "number" }).notNull(),
-    ingredientId: bigint("ingredientId", { mode: "number" }).notNull(),
-    quantity: varchar("quantity", { length: 100 }),
-  },
-  (example) => ({
-    recipeIdIdx: index("recipeId_idx").on(example.recipeId),
-    ingredientIdIdx: index("ingredientId_idx").on(example.ingredientId),
-  }),
-);
+// export const recipesRelations = relations(recipes, ({ many }) => ({
+//   ingredients: many(recipeIngredients),
+// }));
 
-export const recipesRelations = relations(recipes, ({ many }) => ({
-  ingredients: many(recipeIngredients),
-}));
-
-export const ingredientsRelations = relations(ingredients, ({ many }) => ({
-  recipes: many(recipeIngredients),
-}));
+// export const ingredientsRelations = relations(ingredients, ({ many }) => ({
+//   recipes: many(recipeIngredients),
+// }));
 
 export const users = mysqlTable("user", {
   id: varchar("id", { length: 255 }).notNull().primaryKey(),

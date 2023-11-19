@@ -19,8 +19,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import { FormContainer } from "@/components/ui/form-container";
-import { CreateIngredient } from "../../_components/create-ingredient";
-import { api } from "@/trpc/react";
 
 const recipeFormSchema = z.object({
   name: z
@@ -59,8 +57,6 @@ export function EditRecipeForm({ name }: { name: string }) {
     control: form.control,
   });
 
-  const createIngredient = api.ingredient.create.useMutation();
-
   function onSubmit(data: RecipeFormValues) {
     alert(JSON.stringify(data, null, 2));
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
@@ -73,10 +69,6 @@ export function EditRecipeForm({ name }: { name: string }) {
       ),
     });
   }
-
-  const mutate = async (name: string) => {
-    await createIngredient.mutateAsync({ name });
-  };
 
   return (
     <FormContainer title="Edit Recipe">
@@ -237,9 +229,9 @@ export function EditRecipeForm({ name }: { name: string }) {
             >
               Add Ingredient
             </Button>
-            <CreateIngredient mutate={mutate} />
+            {/* <CreateIngredient mutate={mutate} /> */}
           </div>
-          <Button type="submit">Update account</Button>
+          <Button type="submit">Save Changes</Button>
         </form>
       </Form>
     </FormContainer>
