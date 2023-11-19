@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import * as z from "zod";
 
 import { cn } from "@/lib/utils";
@@ -44,7 +44,7 @@ const languages = [
   { label: "Chinese", value: "zh" },
 ] as const;
 
-const accountFormSchema = z.object({
+const recipeFormSchema = z.object({
   name: z
     .string()
     .min(2, {
@@ -56,14 +56,26 @@ const accountFormSchema = z.object({
   language: z.string({
     required_error: "Please select a language.",
   }),
+  urls: z
+    .array(
+      z.object({
+        value: z.string().url({ message: "Please enter a valid URL." }),
+      }),
+    )
+    .optional(),
 });
 
-type RecipeFormValues = z.infer<typeof accountFormSchema>;
+type RecipeFormValues = z.infer<typeof recipeFormSchema>;
 
 export function EditRecipeForm({ name }: { name: string }) {
   const form = useForm<RecipeFormValues>({
-    resolver: zodResolver(accountFormSchema),
+    resolver: zodResolver(recipeFormSchema),
     defaultValues: { name },
+  });
+
+  const { fields, append } = useFieldArray({
+    name: "urls",
+    control: form.control,
   });
 
   function onSubmit(data: RecipeFormValues) {
@@ -105,7 +117,7 @@ export function EditRecipeForm({ name }: { name: string }) {
             name="language"
             render={({ field }) => (
               <FormItem className="flex flex-col">
-                <FormLabel>Language</FormLabel>
+                <FormLabel>Ingredients</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
                     <FormControl>
@@ -161,6 +173,38 @@ export function EditRecipeForm({ name }: { name: string }) {
               </FormItem>
             )}
           />
+          <div>
+            {fields.map((field, index) => (
+              <FormField
+                control={form.control}
+                key={field.id}
+                name={`urls.${index}.value`}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className={cn(index !== 0 && "sr-only")}>
+                      URLs
+                    </FormLabel>
+                    <FormDescription className={cn(index !== 0 && "sr-only")}>
+                      Add links to your website, blog, or social media profiles.
+                    </FormDescription>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            ))}
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="mt-2"
+              onClick={() => append({ value: "" })}
+            >
+              Add URL
+            </Button>
+          </div>
           <Button type="submit">Update account</Button>
         </form>
       </Form>
