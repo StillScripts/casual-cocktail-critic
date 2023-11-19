@@ -19,6 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import { FormContainer } from "@/components/ui/form-container";
+import { Textarea } from "@/components/ui/textarea";
 
 const recipeFormSchema = z.object({
   name: z
@@ -98,7 +99,7 @@ export function EditRecipeForm({ name }: { name: string }) {
               <FormItem>
                 <FormLabel>Description</FormLabel>
                 <FormControl>
-                  <Input placeholder="Your description" {...field} />
+                  <Textarea placeholder="Your description" {...field} />
                 </FormControl>
                 <FormDescription>
                   Summarise the cocktail recipe and highlight what it&apos;s
