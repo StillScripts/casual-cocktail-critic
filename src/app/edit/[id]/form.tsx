@@ -1,19 +1,12 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CaretSortIcon, CheckIcon, Cross1Icon } from "@radix-ui/react-icons";
+import { Cross1Icon } from "@radix-ui/react-icons";
 import { useFieldArray, useForm } from "react-hook-form";
 import * as z from "zod";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "@/components/ui/command";
 import {
   Form,
   FormControl,
@@ -24,32 +17,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { toast } from "@/components/ui/use-toast";
 import { FormContainer } from "@/components/ui/form-container";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-
-const languages = [
-  { label: "English", value: "en" },
-  { label: "French", value: "fr" },
-  { label: "German", value: "de" },
-  { label: "Spanish", value: "es" },
-  { label: "Portuguese", value: "pt" },
-] as const;
+import { CreateIngredient } from "../../_components/create-ingredient";
+import { api } from "@/trpc/react";
 
 const recipeFormSchema = z.object({
   name: z
@@ -88,6 +59,8 @@ export function EditRecipeForm({ name }: { name: string }) {
     control: form.control,
   });
 
+  const createIngredient = api.ingredient.create.useMutation();
+
   function onSubmit(data: RecipeFormValues) {
     alert(JSON.stringify(data, null, 2));
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
@@ -101,10 +74,14 @@ export function EditRecipeForm({ name }: { name: string }) {
     });
   }
 
+  const mutate = async (name: string) => {
+    await createIngredient.mutateAsync({ name });
+  };
+
   return (
     <FormContainer title="Edit Recipe">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <FormField
             control={form.control}
             name="name"
@@ -117,6 +94,23 @@ export function EditRecipeForm({ name }: { name: string }) {
                 <FormDescription>
                   This is the name that will be displayed on your profile and in
                   emails.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <Input placeholder="Your description" {...field} />
+                </FormControl>
+                <FormDescription>
+                  Summarise the cocktail recipe and highlight what it&apos;s
+                  suited for.
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -135,7 +129,7 @@ export function EditRecipeForm({ name }: { name: string }) {
                         Cocktail Ingredients
                       </FormLabel>
                       <FormDescription className={cn(index !== 0 && "sr-only")}>
-                        Name of each ingredient
+                        Select ingredient from list
                       </FormDescription>
                       <FormControl>
                         <Input {...field} placeholder="Vanilla Vodka" />
@@ -243,93 +237,7 @@ export function EditRecipeForm({ name }: { name: string }) {
             >
               Add Ingredient
             </Button>
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button
-                  type="button"
-                  variant="secondary"
-                  size="sm"
-                  className="ml-3 mt-2"
-                >
-                  Create New Ingredient Option
-                </Button>
-              </AlertDialogTrigger>
-
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Cocktail Ingredient</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    Select an option from the menu below or add a new ingredient
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <FormField
-                  control={form.control}
-                  name="language"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col">
-                      <FormLabel>Ingredients List</FormLabel>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button
-                              variant="outline"
-                              role="combobox"
-                              className={cn(
-                                "w-full justify-between",
-                                !field.value && "text-muted-foreground",
-                              )}
-                            >
-                              {field.value
-                                ? languages.find(
-                                    (language) =>
-                                      language.value === field.value,
-                                  )?.label
-                                : "Select ingredient"}
-                              <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-[200px] p-0 md:max-h-16">
-                          <Command>
-                            <CommandInput placeholder="Search language..." />
-                            <CommandEmpty>No language found.</CommandEmpty>
-                            <CommandGroup>
-                              {languages.map((language) => (
-                                <CommandItem
-                                  value={language.label}
-                                  key={language.value}
-                                  onSelect={() => {
-                                    form.setValue("language", language.value);
-                                  }}
-                                >
-                                  <CheckIcon
-                                    className={cn(
-                                      "mr-2 h-4 w-4",
-                                      language.value === field.value
-                                        ? "opacity-100"
-                                        : "opacity-0",
-                                    )}
-                                  />
-                                  {language.label}
-                                </CommandItem>
-                              ))}
-                            </CommandGroup>
-                          </Command>
-                        </PopoverContent>
-                      </Popover>
-                      <FormDescription>
-                        This is the language that will be used in the dashboard.
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction>Continue</AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+            <CreateIngredient mutate={mutate} />
           </div>
           <Button type="submit">Update account</Button>
         </form>

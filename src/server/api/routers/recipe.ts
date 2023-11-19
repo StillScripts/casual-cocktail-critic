@@ -8,14 +8,6 @@ import {
 import { recipes } from "@/server/db/schema";
 
 export const recipeRouter = createTRPCRouter({
-  hello: publicProcedure
-    .input(z.object({ text: z.string() }))
-    .query(({ input }) => {
-      return {
-        greeting: `Hello ${input.text}`,
-      };
-    }),
-
   create: protectedProcedure
     .input(z.object({ name: z.string().min(1) }))
     .mutation(async ({ ctx, input }) => {
@@ -41,8 +33,4 @@ export const recipeRouter = createTRPCRouter({
         where: (recipes, { eq }) => eq(recipes.id, input.id),
       });
     }),
-
-  getSecretMessage: protectedProcedure.query(() => {
-    return "you can now see this secret message!";
-  }),
 });
