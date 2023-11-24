@@ -21,7 +21,7 @@ import { toast } from "@/components/ui/use-toast";
 import { FormContainer } from "@/components/ui/form-container";
 import { Textarea } from "@/components/ui/textarea";
 import { api } from "@/trpc/react";
-import { RouterOutput } from "@/server/api/root";
+import type { RouterOutput } from "@/server/api/root";
 
 const recipeFormSchema = z.object({
   name: z
@@ -33,24 +33,20 @@ const recipeFormSchema = z.object({
       message: "Name must not be longer than 30 characters.",
     }),
   description: z.string().optional(),
-  ingredients: z
-    .array(
-      z.object({
-        // value would be the id of the ingredient
-        value: z.string(),
-        quantity: z.string(),
-      }),
-    )
-    .optional(),
+  ingredients: z.array(
+    z.object({
+      id: z.number().optional(),
+      name: z.string().min(1, { message: "Required field" }),
+      quantity: z.string().min(1, { message: "Required field" }),
+    }),
+  ),
 });
 
 type RecipeFormValues = z.infer<typeof recipeFormSchema>;
 
 export function EditRecipeForm({
-  name,
   recipes,
 }: {
-  name: string;
   recipes: RouterOutput["recipe"]["getRecipe"];
 }) {
   const recipe = recipes[0];
@@ -62,6 +58,10 @@ export function EditRecipeForm({
     defaultValues: {
       name: recipe?.name ?? "",
       description: recipe?.description ?? "",
+      // @ts-expect-error (need to work on null/undefined issue)
+      ingredients: recipe?.recipeIngredients.length
+        ? recipe.recipeIngredients
+        : [{ name: "", quantity: "" }],
     },
   });
 
@@ -78,7 +78,17 @@ export function EditRecipeForm({
         id: recipe.id,
         name: data.name,
         description: data.description ?? "",
+        ingredients: data.ingredients ?? [],
       });
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    toast({
+      title: "You submitted the following values:",
+      description: (
+        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+        </pre>
+      ),
+    });
   }
 
   return (
@@ -125,79 +135,20 @@ export function EditRecipeForm({
               <div className="grid grid-cols-5 gap-3" key={field.id}>
                 <FormField
                   control={form.control}
-                  name={`ingredients.${index}.value`}
+                  name={`ingredients.${index}.name`}
                   render={({ field }) => (
                     <FormItem className="col-span-3">
                       <FormLabel className={cn(index !== 0 && "sr-only")}>
                         Cocktail Ingredients
                       </FormLabel>
                       <FormDescription className={cn(index !== 0 && "sr-only")}>
-                        Select ingredient from list
+                        Name of each ingredient
                       </FormDescription>
                       <FormControl>
                         <Input {...field} placeholder="Vanilla Vodka" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
-                    // TODO maybe we can use the combobox...
-                    // <FormItem className="flex flex-col">
-                    //   <FormLabel className={cn(index !== 0 && "sr-only")}>
-                    //     Cocktail Ingredients
-                    //   </FormLabel>
-                    //   <FormDescription className={cn(index !== 0 && "sr-only")}>
-                    //     Add ingredients to your list
-                    //   </FormDescription>
-                    //   <Popover>
-                    //     <PopoverTrigger asChild>
-                    //       <FormControl>
-                    //         <Button
-                    //           variant="outline"
-                    //           role="combobox"
-                    //           className={cn(
-                    //             "w-full justify-between",
-                    //             !field.value && "text-muted-foreground",
-                    //           )}
-                    //         >
-                    //           {field.value
-                    //             ? languages.find(
-                    //                 (language) => language.value === field.value,
-                    //               )?.label
-                    //             : "Select ingredient"}
-                    //           <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                    //         </Button>
-                    //       </FormControl>
-                    //     </PopoverTrigger>
-                    //     <PopoverContent className="w-[200px] p-0">
-                    //       <Command>
-                    //         <CommandInput placeholder="Search language..." />
-                    //         <CommandEmpty>No language found.</CommandEmpty>
-                    //         <CommandGroup>
-                    //           {languages.map((language) => (
-                    //             <CommandItem
-                    //               value={language.label}
-                    //               key={language.value}
-                    //               onSelect={() => {
-                    //                 form.setValue("language", language.value);
-                    //               }}
-                    //             >
-                    //               <CheckIcon
-                    //                 className={cn(
-                    //                   "mr-2 h-4 w-4",
-                    //                   language.value === field.value
-                    //                     ? "opacity-100"
-                    //                     : "opacity-0",
-                    //                 )}
-                    //               />
-                    //               {language.label}
-                    //             </CommandItem>
-                    //           ))}
-                    //         </CommandGroup>
-                    //       </Command>
-                    //     </PopoverContent>
-                    //   </Popover>
-
-                    //   <FormMessage />
-                    // </FormItem>
                   )}
                 />
                 <div className="col-span-2 flex items-end space-x-2">
@@ -236,11 +187,10 @@ export function EditRecipeForm({
               variant="outline"
               size="sm"
               className="mt-2"
-              onClick={() => append({ value: "", quantity: "" })}
+              onClick={() => append({ name: "", quantity: "" })}
             >
               Add Ingredient
             </Button>
-            {/* <CreateIngredient mutate={mutate} /> */}
           </div>
           <Button type="submit">Save Changes</Button>
         </form>
