@@ -20,6 +20,8 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import { FormContainer } from "@/components/ui/form-container";
 import { Textarea } from "@/components/ui/textarea";
+import { api } from "@/trpc/react";
+import { RouterOutput } from "@/server/api/root";
 
 const recipeFormSchema = z.object({
   name: z
@@ -30,10 +32,7 @@ const recipeFormSchema = z.object({
     .max(30, {
       message: "Name must not be longer than 30 characters.",
     }),
-  description: z.string(),
-  language: z.string({
-    required_error: "Please select a language.",
-  }),
+  description: z.string().optional(),
   ingredients: z
     .array(
       z.object({
@@ -47,10 +46,23 @@ const recipeFormSchema = z.object({
 
 type RecipeFormValues = z.infer<typeof recipeFormSchema>;
 
-export function EditRecipeForm({ name }: { name: string }) {
+export function EditRecipeForm({
+  name,
+  recipes,
+}: {
+  name: string;
+  recipes: RouterOutput["recipe"]["getRecipe"];
+}) {
+  const recipe = recipes[0];
+  //const createIngredients = api.recipeIngredient.createMultiple.useMutation();
+  const editRecipe = api.recipe.update.useMutation();
+
   const form = useForm<RecipeFormValues>({
     resolver: zodResolver(recipeFormSchema),
-    defaultValues: { name },
+    defaultValues: {
+      name: recipe?.name ?? "",
+      description: recipe?.description ?? "",
+    },
   });
 
   const { fields, append, remove } = useFieldArray({
@@ -59,16 +71,14 @@ export function EditRecipeForm({ name }: { name: string }) {
   });
 
   function onSubmit(data: RecipeFormValues) {
+    console.log("submitting");
     alert(JSON.stringify(data, null, 2));
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+    if (recipe)
+      editRecipe.mutate({
+        id: recipe.id,
+        name: data.name,
+        description: data.description ?? "",
+      });
   }
 
   return (

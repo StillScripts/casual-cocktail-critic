@@ -6,6 +6,7 @@ import {
   publicProcedure,
 } from "@/server/api/trpc";
 import { recipes } from "@/server/db/schema";
+import { eq } from "drizzle-orm";
 
 export const recipeRouter = createTRPCRouter({
   create: protectedProcedure
@@ -18,6 +19,20 @@ export const recipeRouter = createTRPCRouter({
         name: input.name,
         createdById: ctx.session.user.id,
       });
+    }),
+  update: protectedProcedure
+    .input(
+      z.object({
+        id: z.number(),
+        name: z.string().min(1),
+        description: z.string().optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db
+        .update(recipes)
+        .set({ name: input.name, description: input.description })
+        .where(eq(recipes.id, input.id));
     }),
 
   getLatest: publicProcedure.query(({ ctx }) => {

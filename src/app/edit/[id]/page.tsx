@@ -11,7 +11,7 @@ const EditRecipePage = async ({ params }: { params: { id: string } }) => {
   }
   return (
     <div className="min-h-screen bg-neutral-300 p-16">
-      <EditRecipeForm name={recipe.name!} />
+      <EditRecipeForm name={recipe.name!} recipes={recipes} />
     </div>
   );
 };
