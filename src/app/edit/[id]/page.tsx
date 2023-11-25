@@ -10,7 +10,7 @@ const EditRecipePage = async ({ params }: { params: { id: string } }) => {
     return <h2>Recipe Not Found</h2>;
   }
   return (
-    <div className="min-h-screen bg-neutral-300 p-16">
+    <div className="min-h-screen  p-16">
       <EditRecipeForm recipes={recipes} />
     </div>
   );

@@ -9,7 +9,7 @@ import { getServerAuthSession } from "@/server/auth";
 import { api } from "@/trpc/server";
 import { RecipeActions } from "./recipe-actions";
 
-export const Recipies = async () => {
+export const Recipes = async () => {
   const session = await getServerAuthSession();
   if (!session?.user) return null;
 

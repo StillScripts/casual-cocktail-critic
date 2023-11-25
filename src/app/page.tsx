@@ -1,7 +1,6 @@
 import Link from "next/link";
 
-import { CreateRecipe } from "@/app/_components/create-recipe";
-import { Recipies } from "@/app/_components/recipes";
+import { RecipesTable } from "@/app/_components/recipes-table";
 
 import { getServerAuthSession } from "@/server/auth";
 import { Button } from "@/components/ui/button";
@@ -29,7 +28,7 @@ export default async function Home() {
           </div>
         </div>
 
-        <Recipies />
+        <RecipesTable />
       </div>
     </main>
   );
