@@ -30,7 +30,7 @@ export const recipeRouter = createTRPCRouter({
           z.object({
             name: z.string(),
             quantity: z.string(),
-            id: z.number().optional(),
+            recipeIngredientId: z.number().optional(),
           }),
         ),
       }),
@@ -43,9 +43,10 @@ export const recipeRouter = createTRPCRouter({
         .where(eq(recipes.id, input.id));
       // Create the new recipe ingredients
       const newIngredients = input.ingredients.filter(
-        (ingredient) => !ingredient?.id,
+        (ingredient) => !ingredient?.recipeIngredientId,
       );
       if (newIngredients.length > 0) {
+        console.log("new ingredients");
         await ctx.db.insert(recipeIngredients).values(
           newIngredients.map((ingredient) => ({
             ...ingredient,
@@ -54,15 +55,32 @@ export const recipeRouter = createTRPCRouter({
         );
       }
       const existingIngredients = input.ingredients.filter(
-        (ingredient) => ingredient?.id,
+        (ingredient) => ingredient?.recipeIngredientId,
       );
       if (existingIngredients.length > 0) {
+        console.log("existing ingredients");
         await Promise.all(
           existingIngredients.map((ingredient) =>
             ctx.db
               .update(recipeIngredients)
-              .set(ingredient)
-              .where(eq(recipeIngredients.id, ingredient.id!)),
+              .set({
+                name: ingredient.name,
+                quantity: ingredient.quantity,
+              })
+              .where(eq(recipeIngredients.id, ingredient.recipeIngredientId!)),
+          ),
+        );
+      }
+    }),
+  deleteRecipeIngredients: protectedProcedure
+    .input(z.array(z.number()))
+    .mutation(async ({ ctx, input }) => {
+      if (input.length > 0) {
+        await Promise.all(
+          input.map((id) =>
+            ctx.db
+              .delete(recipeIngredients)
+              .where(eq(recipeIngredients.id, id)),
           ),
         );
       }
@@ -79,7 +97,6 @@ export const recipeRouter = createTRPCRouter({
     .query(({ ctx, input }) => {
       return ctx.db.query.recipes.findMany({
         where: eq(recipes.id, input.id),
-
         with: {
           recipeIngredients: true,
         },

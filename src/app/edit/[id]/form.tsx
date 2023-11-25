@@ -22,6 +22,7 @@ import { FormContainer } from "@/components/ui/form-container";
 import { Textarea } from "@/components/ui/textarea";
 import { api } from "@/trpc/react";
 import type { RouterOutput } from "@/server/api/root";
+import { useState } from "react";
 
 const recipeFormSchema = z.object({
   name: z
@@ -35,9 +36,9 @@ const recipeFormSchema = z.object({
   description: z.string().optional(),
   ingredients: z.array(
     z.object({
-      id: z.number().optional(),
       name: z.string().min(1, { message: "Required field" }),
       quantity: z.string().min(1, { message: "Required field" }),
+      recipeIngredientId: z.number().optional(),
     }),
   ),
 });
@@ -50,9 +51,9 @@ export function EditRecipeForm({
   recipes: RouterOutput["recipe"]["getRecipe"];
 }) {
   const recipe = recipes[0];
-  //const createIngredients = api.recipeIngredient.createMultiple.useMutation();
   const editRecipe = api.recipe.update.useMutation();
-
+  const deleteRecipeIngredients =
+    api.recipe.deleteRecipeIngredients.useMutation();
   const form = useForm<RecipeFormValues>({
     resolver: zodResolver(recipeFormSchema),
     defaultValues: {
@@ -60,7 +61,10 @@ export function EditRecipeForm({
       description: recipe?.description ?? "",
       // @ts-expect-error (need to work on null/undefined issue)
       ingredients: recipe?.recipeIngredients.length
-        ? recipe.recipeIngredients
+        ? recipe.recipeIngredients.map((r) => ({
+            ...r,
+            recipeIngredientId: r.id,
+          }))
         : [{ name: "", quantity: "" }],
     },
   });
@@ -69,10 +73,9 @@ export function EditRecipeForm({
     name: "ingredients",
     control: form.control,
   });
+  const [removed, setRemoved] = useState<number[]>([]);
 
   function onSubmit(data: RecipeFormValues) {
-    console.log("submitting");
-    alert(JSON.stringify(data, null, 2));
     if (recipe)
       editRecipe.mutate({
         id: recipe.id,
@@ -80,6 +83,10 @@ export function EditRecipeForm({
         description: data.description ?? "",
         ingredients: data.ingredients ?? [],
       });
+    if (removed.length > 0) {
+      deleteRecipeIngredients.mutate(removed);
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     toast({
       title: "You submitted the following values:",
@@ -89,6 +96,7 @@ export function EditRecipeForm({
         </pre>
       ),
     });
+    setRemoved([]);
   }
 
   return (
@@ -175,9 +183,14 @@ export function EditRecipeForm({
                   <Button
                     className="text-red-600 hover:text-red-700"
                     variant="ghost"
-                    onClick={() => remove(index)}
+                    onClick={() => {
+                      if (field.recipeIngredientId) {
+                        setRemoved([...removed, field.recipeIngredientId]);
+                      }
+                      remove(index);
+                    }}
                   >
-                    <Cross1Icon />
+                    <Cross1Icon /> {field.recipeIngredientId}
                   </Button>
                 </div>
               </div>
