@@ -32,14 +32,14 @@ export const RecipesTable = async () => {
           <TableRow key={recipe.id}>
             <TableCell className="font-medium">{recipe.name}</TableCell>
             <TableCell className="truncate">{recipe.description}</TableCell>
-            <RecipeActions id={recipe.id} />
+            <RecipeActions id={recipe.id} table />
           </TableRow>
         ))}
       </TableBody>
       <TableFooter>
         <TableRow>
           <TableCell colSpan={2}>Total</TableCell>
-          <TableCell>5 Recipes</TableCell>
+          <TableCell>{recipes.length} Recipes</TableCell>
         </TableRow>
       </TableFooter>
     </Table>

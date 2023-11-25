@@ -20,17 +20,7 @@ export const RecipeActions = ({
       <div className="flex">
         <TableCell>
           <Button
-            className="text-red-600 hover:text-red-700"
-            variant="ghost"
-            size="sm"
-            onClick={() => deleteRecipe.mutate({ id })}
-          >
-            <Cross2Icon />
-          </Button>
-        </TableCell>
-        <TableCell>
-          <Button
-            className="text-pink-600 hover:text-pink-700"
+            className="text-green-700 hover:text-green-800"
             variant="ghost"
             size="sm"
             onClick={() => {
@@ -41,8 +31,24 @@ export const RecipeActions = ({
           </Button>
         </TableCell>
         <TableCell>
-          <Button variant="ghost" size="sm">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              router.push(`/view/${id}`);
+            }}
+          >
             <EyeOpenIcon />
+          </Button>
+        </TableCell>
+        <TableCell>
+          <Button
+            className="text-red-600 hover:text-red-700"
+            variant="ghost"
+            size="sm"
+            onClick={() => deleteRecipe.mutate({ id })}
+          >
+            <Cross2Icon />
           </Button>
         </TableCell>
       </div>
@@ -51,7 +57,7 @@ export const RecipeActions = ({
   return (
     <div className="flex">
       <Button
-        className="text-pink-600 hover:text-pink-700"
+        className="text-green-600 hover:text-green-700"
         variant="ghost"
         size="sm"
         onClick={() => {
@@ -60,7 +66,13 @@ export const RecipeActions = ({
       >
         <Pencil2Icon />
       </Button>
-      <Button variant="ghost" size="sm">
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => {
+          router.push(`/view/${id}`);
+        }}
+      >
         <EyeOpenIcon />
       </Button>
       <Button
