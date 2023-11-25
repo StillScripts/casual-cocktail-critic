@@ -12,9 +12,6 @@ export const recipeRouter = createTRPCRouter({
   create: protectedProcedure
     .input(z.object({ name: z.string().min(1) }))
     .mutation(async ({ ctx, input }) => {
-      // simulate a slow db call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
       await ctx.db.insert(recipes).values({
         name: input.name,
         createdById: ctx.session.user.id,
@@ -72,6 +69,12 @@ export const recipeRouter = createTRPCRouter({
         );
       }
     }),
+  delete: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.delete(recipes).where(eq(recipes.id, input.id));
+    }),
+
   deleteRecipeIngredients: protectedProcedure
     .input(z.array(z.number()))
     .mutation(async ({ ctx, input }) => {
@@ -102,4 +105,7 @@ export const recipeRouter = createTRPCRouter({
         },
       });
     }),
+  getRecipes: publicProcedure.query(({ ctx }) => {
+    return ctx.db.query.recipes.findMany();
+  }),
 });

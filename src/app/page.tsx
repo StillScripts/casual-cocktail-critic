@@ -1,8 +1,9 @@
 import Link from "next/link";
 
 import { CreateRecipe } from "@/app/_components/create-recipe";
+import { Recipies } from "@/app/_components/recipes";
+
 import { getServerAuthSession } from "@/server/auth";
-import { api } from "@/trpc/server";
 
 export default async function Home() {
   const session = await getServerAuthSession();
@@ -28,28 +29,8 @@ export default async function Home() {
           </div>
         </div>
 
-        <CrudShowcase />
+        <Recipies />
       </div>
     </main>
-  );
-}
-
-async function CrudShowcase() {
-  const session = await getServerAuthSession();
-  if (!session?.user) return null;
-
-  const recipe = await api.recipe.getLatest.query();
-
-  return (
-    <div className="w-full max-w-xs">
-      {recipe ? (
-        <p className="truncate">Your most recent recipe: {recipe.name}</p>
-      ) : (
-        <p>You have no recipes yet.</p>
-      )}
-
-      {/** @ts-expect-error annoying */}
-      <CreateRecipe recipe={recipe} />
-    </div>
   );
 }
