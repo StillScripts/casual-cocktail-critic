@@ -12,6 +12,9 @@ const Header = async () => {
       </Link>
       <div className="flex items-center justify-end space-x-2 lg:space-x-3">
         <Button variant="link" asChild>
+          <Link href="/recipes">Cocktails</Link>
+        </Button>
+        <Button variant="link" asChild>
           <Link href={session ? "/api/auth/signout" : "/api/auth/signin"}>
             {session ? "Sign out" : "Sign in"}
             <span aria-hidden="true">&nbsp;&rarr;</span>

@@ -190,7 +190,7 @@ export function EditRecipeForm({
                       remove(index);
                     }}
                   >
-                    <Cross1Icon /> {field.recipeIngredientId}
+                    <Cross1Icon />
                   </Button>
                 </div>
               </div>
