@@ -46,7 +46,6 @@ export const recipeRouter = createTRPCRouter({
         (ingredient) => !ingredient?.recipeIngredientId,
       );
       if (newIngredients.length > 0) {
-        console.log("new ingredients");
         await ctx.db.insert(recipeIngredients).values(
           newIngredients.map((ingredient) => ({
             ...ingredient,
@@ -58,7 +57,6 @@ export const recipeRouter = createTRPCRouter({
         (ingredient) => ingredient?.recipeIngredientId,
       );
       if (existingIngredients.length > 0) {
-        console.log("existing ingredients");
         await Promise.all(
           existingIngredients.map((ingredient) =>
             ctx.db
@@ -108,6 +106,7 @@ export const recipeRouter = createTRPCRouter({
         },
       });
     }),
+
   getRecipes: publicProcedure.query(({ ctx }) => {
     return ctx.db.query.recipes.findMany({
       orderBy: [desc(recipes.createdAt)],

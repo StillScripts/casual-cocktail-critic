@@ -1,5 +1,4 @@
 import { createTRPCRouter } from "@/server/api/trpc";
-import { ingredientRouter } from "@/server/api/routers/ingredient";
 import { recipeRouter } from "@/server/api/routers/recipe";
 import type { inferRouterOutputs } from "@trpc/server";
 
@@ -9,7 +8,6 @@ import type { inferRouterOutputs } from "@trpc/server";
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
-  ingredient: ingredientRouter,
   recipe: recipeRouter,
 });
 
