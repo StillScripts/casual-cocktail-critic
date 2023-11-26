@@ -16,7 +16,7 @@ export const RecipesTable = async () => {
   const session = await getServerAuthSession();
   if (!session?.user) return null;
 
-  const recipes = await api.recipe.getRecipes.query();
+  const recipes = await api.recipe.getSingles.query();
   return (
     <Table>
       <TableCaption>A list of recipes.</TableCaption>

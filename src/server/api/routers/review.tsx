@@ -5,18 +5,23 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "@/server/api/trpc";
-import { recipeIngredients, recipes } from "@/server/db/schema";
+import { recipeIngredients, recipes, recipeReviews } from "@/server/db/schema";
 import { desc, eq } from "drizzle-orm";
 
-export const recipeRouter = createTRPCRouter({
+export const reviewRouter = createTRPCRouter({
   create: protectedProcedure
     .input(
-      z.object({ name: z.string().min(1), description: z.string().optional() }),
+      z.object({
+        feedback: z.string().min(2),
+        rating: z.number(),
+        recipeId: z.number(),
+      }),
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.insert(recipes).values({
-        name: input.name,
-        description: input.description,
+      await ctx.db.insert(recipeReviews).values({
+        feedback: input.feedback,
+        rating: input.rating,
+        recipeId: input.recipeId,
         createdById: ctx.session.user.id,
       });
     }),
@@ -96,25 +101,13 @@ export const recipeRouter = createTRPCRouter({
     });
   }),
 
-  getSingle: publicProcedure
+  getRecipe: publicProcedure
     .input(z.object({ id: z.number().min(1) }))
     .query(({ ctx, input }) => {
       return ctx.db.query.recipes.findMany({
         where: eq(recipes.id, input.id),
         with: {
           recipeIngredients: true,
-        },
-      });
-    }),
-
-  getWithReviews: publicProcedure
-    .input(z.object({ id: z.number().min(1) }))
-    .query(({ ctx, input }) => {
-      return ctx.db.query.recipes.findMany({
-        where: eq(recipes.id, input.id),
-        with: {
-          recipeIngredients: true,
-          recipeReviews: true,
         },
       });
     }),

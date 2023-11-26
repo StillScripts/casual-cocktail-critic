@@ -42,7 +42,10 @@ export const AddNewReview = ({ recipe }: { recipe: Recipe }) => {
         <DialogDescription>
           Add a rating and feedback for the {recipe.name} cocktail.
         </DialogDescription>
-        <CreateReviewForm close={() => setForceClose(true)} />
+        <CreateReviewForm
+          close={() => setForceClose(true)}
+          recipeId={recipe.id}
+        />
       </DialogContent>
     </Dialog>
   );

@@ -20,35 +20,45 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { SubmitButton } from "@/components/ui/submit-button";
 
-const recipeFormSchema = z.object({
+const reviewFormSchema = z.object({
   feedback: z.string().min(2, {
     message: "Feedback is required",
   }),
-  rating: z.number(),
+  rating: z.coerce
+    .number()
+    .gte(1, { message: "The rating must be between 1 and 10" })
+    .lte(10, { message: "The rating must be between 1 and 10" }),
 });
 
-type RecipeFormValues = z.infer<typeof recipeFormSchema>;
+type ReviewFormValues = z.infer<typeof reviewFormSchema>;
 
-export function CreateReviewForm({ close }: { close: () => void }) {
+export function CreateReviewForm({
+  close,
+  recipeId,
+}: {
+  close: () => void;
+  recipeId: number;
+}) {
   const router = useRouter();
-  const createRecipe = api.recipe.create.useMutation();
-  const form = useForm<RecipeFormValues>({
-    resolver: zodResolver(recipeFormSchema),
+  const createReviews = api.review.create.useMutation();
+  const form = useForm<ReviewFormValues>({
+    resolver: zodResolver(reviewFormSchema),
   });
 
-  function onSubmit(data: RecipeFormValues) {
-    // createRecipe.mutate({
-    //   name: data.name,
-    //   description: data.description ?? "",
-    // });
+  function onSubmit(data: ReviewFormValues) {
+    createReviews.mutate({
+      feedback: data.feedback,
+      rating: parseFloat(`${data.rating}`),
+      recipeId,
+    });
   }
 
   useEffect(() => {
-    if (createRecipe?.isSuccess) {
+    if (createReviews?.isSuccess) {
       close();
       router.refresh();
     }
-  }, [close, createRecipe?.isSuccess, router]);
+  }, [close, createReviews?.isSuccess, router]);
 
   return (
     <Form {...form}>
@@ -85,7 +95,7 @@ export function CreateReviewForm({ close }: { close: () => void }) {
             </FormItem>
           )}
         />
-        <SubmitButton loading={createRecipe.isLoading}>
+        <SubmitButton loading={createReviews.isLoading}>
           Add Your Rating
         </SubmitButton>
       </form>

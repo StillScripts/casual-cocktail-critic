@@ -1,5 +1,6 @@
 import { createTRPCRouter } from "@/server/api/trpc";
 import { recipeRouter } from "@/server/api/routers/recipe";
+import { reviewRouter } from "@/server/api/routers/review";
 import type { inferRouterOutputs } from "@trpc/server";
 
 /**
@@ -9,6 +10,7 @@ import type { inferRouterOutputs } from "@trpc/server";
  */
 export const appRouter = createTRPCRouter({
   recipe: recipeRouter,
+  review: reviewRouter,
 });
 
 // export type definition of API
