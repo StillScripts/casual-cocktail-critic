@@ -2,6 +2,7 @@ import { RecipesTable } from "@/app/_components/recipes-table";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { AddNewRecipe } from "@/app/_components/add-new-recipe";
+import { RecipesTableSkeleton } from "@/app/_components/recipes-table-skeleton";
 
 export const metadata: Metadata = {
   title: "Cocktails Collection",
@@ -16,7 +17,7 @@ const RecipesPage = () => {
         </h1>
         <AddNewRecipe />
       </div>
-      <Suspense fallback={null}>
+      <Suspense fallback={<RecipesTableSkeleton />}>
         <RecipesTable />
       </Suspense>
     </main>
