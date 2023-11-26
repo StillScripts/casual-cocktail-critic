@@ -32,7 +32,9 @@ export const Recipes = async () => {
           ))}
         </div>
       ) : (
-        <p>You have no recipes yet.</p>
+        <div className="p-6">
+          <p className="text-xl font-bold">You have no recipes yet.</p>
+        </div>
       )}
     </div>
   );

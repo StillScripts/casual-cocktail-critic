@@ -14,7 +14,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { api } from "@/trpc/react";
 import { useState } from "react";
 
 export const CreateIngredient = ({
