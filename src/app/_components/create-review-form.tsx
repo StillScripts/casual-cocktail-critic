@@ -76,7 +76,7 @@ export function CreateReviewForm({ close }: { close: () => void }) {
             <FormItem>
               <FormLabel>Rating</FormLabel>
               <FormControl>
-                <Input placeholder="Your rating" {...field} />
+                <Input placeholder="Your rating" type="number" {...field} />
               </FormControl>
               <FormDescription>
                 Give the cocktail a rating out of 5
