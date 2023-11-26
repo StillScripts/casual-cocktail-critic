@@ -101,6 +101,7 @@ export const recipeRouter = createTRPCRouter({
     .query(() => {
       return [
         {
+          id: 11,
           name: "example",
           description: "this works",
           recipeIngredients: [{ id: 1, name: "example", quantity: "1 ml" }],
