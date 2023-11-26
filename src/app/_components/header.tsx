@@ -8,7 +8,7 @@ const Header = async () => {
   return (
     <header className="sticky top-0 z-50 flex h-16 w-full shrink-0 items-center justify-between border-b bg-gradient-to-b from-background/10 via-background/50 to-background/80 px-4 backdrop-blur-xl">
       <Link href="/" className="font-extrabold uppercase">
-        Luantica&apos;s <span className="text-primary">Cocktails</span>
+        C<span className="text-primary">C</span>C
       </Link>
       <div className="flex items-center justify-end space-x-2 lg:space-x-3">
         <Button variant="link" asChild>
