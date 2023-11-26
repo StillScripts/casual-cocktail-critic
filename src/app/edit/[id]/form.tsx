@@ -60,7 +60,7 @@ export function EditRecipeForm({
     defaultValues: {
       name: recipe?.name ?? "",
       description: recipe?.description ?? "",
-      // s-expect-error (need to work on null/undefined issue)
+      // @ts-expect-error (need to work on null/undefined issue)
       ingredients: recipe?.recipeIngredients.length
         ? recipe.recipeIngredients.map((r) => ({
             ...r,
