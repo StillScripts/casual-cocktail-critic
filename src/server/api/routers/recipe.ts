@@ -98,13 +98,20 @@ export const recipeRouter = createTRPCRouter({
 
   getRecipe: publicProcedure
     .input(z.object({ id: z.number().min(1) }))
-    .query(({ ctx, input }) => {
-      return ctx.db.query.recipes.findMany({
-        where: eq(recipes.id, input.id),
-        with: {
-          recipeIngredients: true,
+    .query(() => {
+      return [
+        {
+          name: "example",
+          description: "this works",
+          recipeIngredients: [{ id: 1, name: "example", quantity: "1 ml" }],
         },
-      });
+      ];
+      // ctx.db.query.recipes.findMany({
+      //   where: eq(recipes.id, input.id),
+      //   with: {
+      //     recipeIngredients: true,
+      //   },
+      // });
     }),
 
   getRecipes: publicProcedure.query(({ ctx }) => {
