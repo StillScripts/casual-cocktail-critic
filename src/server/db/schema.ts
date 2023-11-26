@@ -8,6 +8,7 @@ import {
   text,
   timestamp,
   varchar,
+  float,
 } from "drizzle-orm/mysql-core";
 import { type AdapterAccount } from "next-auth/adapters";
 
@@ -27,6 +28,7 @@ export const recipes = mysqlTable(
     id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
     name: varchar("name", { length: 256 }),
     description: text("description"),
+    instructions: text("instructions"),
     createdById: varchar("createdById", { length: 255 }).notNull(),
     createdAt: timestamp("created_at")
       .default(sql`CURRENT_TIMESTAMP`)
@@ -52,8 +54,28 @@ export const recipeIngredients = mysqlTable(
   }),
 );
 
-export const recipeRelations = relations(recipes, ({ many }) => ({
+export const recipeReviews = mysqlTable(
+  "recipe_review",
+  {
+    id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
+    feedback: text("feedback"),
+    rating: float("rating"),
+    recipeId: int("recipeId").notNull(),
+    createdById: varchar("createdById", { length: 255 }).notNull(),
+  },
+  (example) => ({
+    createdByIdIdx: index("createdById_idx").on(example.createdById),
+    recipeIndex: index("recipe_idx").on(example.recipeId),
+  }),
+);
+
+export const recipeRelations = relations(recipes, ({ many, one }) => ({
   recipeIngredients: many(recipeIngredients),
+  recipeReviews: many(recipeReviews),
+  user: one(users, {
+    fields: [recipes.createdById],
+    references: [users.id],
+  }),
 }));
 
 export const recipeIngredientsRelations = relations(
@@ -66,6 +88,18 @@ export const recipeIngredientsRelations = relations(
   }),
 );
 
+export const recipeReviewsRelations = relations(recipeReviews, ({ one }) => ({
+  recipes: one(recipes, {
+    fields: [recipeReviews.recipeId],
+    references: [recipes.id],
+  }),
+  user: one(users, {
+    fields: [recipeReviews.createdById],
+    references: [users.id],
+  }),
+}));
+
+// Unused
 export const ingredients = mysqlTable(
   "ingredient",
   {
@@ -76,14 +110,6 @@ export const ingredients = mysqlTable(
     nameIndex: index("name_idx").on(example.name),
   }),
 );
-
-// export const recipesRelations = relations(recipes, ({ many }) => ({
-//   ingredients: many(recipeIngredients),
-// }));
-
-// export const ingredientsRelations = relations(ingredients, ({ many }) => ({
-//   recipes: many(recipeIngredients),
-// }));
 
 export const users = mysqlTable("user", {
   id: varchar("id", { length: 255 }).notNull().primaryKey(),
@@ -98,6 +124,8 @@ export const users = mysqlTable("user", {
 
 export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
+  recipes: many(recipes),
+  recipeReviews: many(recipeReviews),
 }));
 
 export const accounts = mysqlTable(
