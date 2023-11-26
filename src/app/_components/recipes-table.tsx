@@ -23,7 +23,7 @@ export const RecipesTable = async () => {
       <TableHeader>
         <TableRow>
           <TableHead className="w-[140px]">Title</TableHead>
-          <TableHead>Description</TableHead>
+          <TableHead className="hidden sm:block">Description</TableHead>
           <TableHead>Actions</TableHead>
         </TableRow>
       </TableHeader>
@@ -31,7 +31,9 @@ export const RecipesTable = async () => {
         {recipes.map((recipe) => (
           <TableRow key={recipe.id}>
             <TableCell className="font-medium">{recipe.name}</TableCell>
-            <TableCell className="truncate">{recipe.description}</TableCell>
+            <TableCell className="hidden truncate sm:block">
+              {recipe.description}
+            </TableCell>
             <RecipeActions id={recipe.id} table />
           </TableRow>
         ))}
@@ -39,7 +41,8 @@ export const RecipesTable = async () => {
       <TableFooter>
         <TableRow>
           <TableCell colSpan={2}>Total</TableCell>
-          <TableCell>{recipes.length} Recipes</TableCell>
+          <TableCell>{recipes.length}</TableCell>
+          <TableCell className="hidden sm:block"></TableCell>
         </TableRow>
       </TableFooter>
     </Table>

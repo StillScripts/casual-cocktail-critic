@@ -4,6 +4,7 @@ import { TableCell } from "@/components/ui/table";
 import { api } from "@/trpc/react";
 import { Cross2Icon, EyeOpenIcon, Pencil2Icon } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export const RecipeActions = ({
   id,
@@ -15,10 +16,16 @@ export const RecipeActions = ({
   const router = useRouter();
   const deleteRecipe = api.recipe.delete.useMutation();
 
+  useEffect(() => {
+    if (deleteRecipe?.isSuccess) {
+      router.refresh();
+    }
+  }, [deleteRecipe?.isSuccess, router]);
+
   if (table) {
     return (
-      <div className="flex">
-        <TableCell>
+      <TableCell>
+        <div className="no-wrap flex">
           <Button
             className="text-green-700 hover:text-green-800"
             variant="ghost"
@@ -29,8 +36,6 @@ export const RecipeActions = ({
           >
             <Pencil2Icon />
           </Button>
-        </TableCell>
-        <TableCell>
           <Button
             variant="ghost"
             size="sm"
@@ -40,8 +45,7 @@ export const RecipeActions = ({
           >
             <EyeOpenIcon />
           </Button>
-        </TableCell>
-        <TableCell>
+
           <Button
             className="text-red-600 hover:text-red-700"
             variant="ghost"
@@ -50,8 +54,8 @@ export const RecipeActions = ({
           >
             <Cross2Icon />
           </Button>
-        </TableCell>
-      </div>
+        </div>
+      </TableCell>
     );
   }
   return (
