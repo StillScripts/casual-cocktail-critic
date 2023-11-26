@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -17,9 +16,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { api } from "@/trpc/react";
-import { LoadingSpinner } from "@/components/ui/icons";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { SubmitButton } from "@/components/ui/submit-button";
 
 const recipeFormSchema = z.object({
   name: z
@@ -55,8 +54,6 @@ export function CreateRecipeForm({ close }: { close: () => void }) {
       router.refresh();
     }
   }, [close, createRecipe?.isSuccess, router]);
-
-  const loading = createRecipe?.isLoading;
 
   return (
     <Form {...form}>
@@ -94,16 +91,9 @@ export function CreateRecipeForm({ close }: { close: () => void }) {
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={loading}>
-          {loading ? (
-            <div className="flex items-end">
-              <span className="mr-2">Saving...</span>
-              <LoadingSpinner />
-            </div>
-          ) : (
-            "Add New Recipe"
-          )}
-        </Button>
+        <SubmitButton loading={createRecipe.isLoading}>
+          Add New Recipe
+        </SubmitButton>
       </form>
     </Form>
   );

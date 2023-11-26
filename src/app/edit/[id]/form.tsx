@@ -23,6 +23,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { api } from "@/trpc/react";
 import type { RouterOutput } from "@/server/api/root";
 import { useState } from "react";
+import { SubmitButton } from "@/components/ui/submit-button";
 
 const recipeFormSchema = z.object({
   name: z
@@ -113,8 +114,7 @@ export function EditRecipeForm({
                   <Input placeholder="Your name" {...field} />
                 </FormControl>
                 <FormDescription>
-                  This is the name that will be displayed on your profile and in
-                  emails.
+                  This is the name of the cocktail ingredient
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -140,16 +140,24 @@ export function EditRecipeForm({
 
           <div>
             {fields.map((field, index) => (
-              <div className="grid grid-cols-5 gap-3" key={field.id}>
+              <div
+                className="grid grid-cols-4 gap-3 sm:grid-cols-5"
+                key={field.id}
+              >
                 <FormField
                   control={form.control}
                   name={`ingredients.${index}.name`}
                   render={({ field }) => (
-                    <FormItem className="col-span-3">
+                    <FormItem className="col-span-2 sm:col-span-3">
                       <FormLabel className={cn(index !== 0 && "sr-only")}>
-                        Cocktail Ingredients
+                        Ingredients
                       </FormLabel>
-                      <FormDescription className={cn(index !== 0 && "sr-only")}>
+                      <FormDescription
+                        className={cn(
+                          index !== 0 && "sr-only",
+                          "hidden sm:block",
+                        )}
+                      >
                         Name of each ingredient
                       </FormDescription>
                       <FormControl>
@@ -159,7 +167,7 @@ export function EditRecipeForm({
                     </FormItem>
                   )}
                 />
-                <div className="col-span-2 flex items-end space-x-2">
+                <div className="col-span-2 flex items-end space-x-1 sm:space-x-2">
                   <FormField
                     control={form.control}
                     name={`ingredients.${index}.quantity`}
@@ -169,7 +177,10 @@ export function EditRecipeForm({
                           Quantity
                         </FormLabel>
                         <FormDescription
-                          className={cn(index !== 0 && "sr-only")}
+                          className={cn(
+                            index !== 0 && "sr-only",
+                            "hidden sm:block",
+                          )}
                         >
                           Quantity of each ingredient
                         </FormDescription>
@@ -205,7 +216,9 @@ export function EditRecipeForm({
               Add Ingredient
             </Button>
           </div>
-          <Button type="submit">Save Changes</Button>
+          <SubmitButton loading={editRecipe.isLoading}>
+            Save Changes
+          </SubmitButton>
         </form>
       </Form>
     </FormContainer>
