@@ -12,10 +12,11 @@ const handler = (req: NextRequest) =>
     router: appRouter,
     createContext: () => createTRPCContext({ req }),
     onError:
-      env.NODE_ENV === "development"
+      //env.NODE_ENV === "development"
+      true
         ? ({ path, error }) => {
             console.error(
-              `❌ tRPC failed on ${path ?? "<no-path>"}: ${error.message}`
+              `❌ tRPC failed on ${path ?? "<no-path>"}: ${error.message}`,
             );
           }
         : undefined,
