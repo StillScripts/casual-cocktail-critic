@@ -22,7 +22,7 @@ import { FormContainer } from "@/components/ui/form-container";
 import { Textarea } from "@/components/ui/textarea";
 import { api } from "@/trpc/react";
 import type { RouterOutput } from "@/server/api/root";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SubmitButton } from "@/components/ui/submit-button";
 
 const recipeFormSchema = z.object({
@@ -87,18 +87,24 @@ export function EditRecipeForm({
     if (removed.length > 0) {
       deleteRecipeIngredients.mutate(removed);
     }
-
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
     setRemoved([]);
   }
+
+  useEffect(() => {
+    if (editRecipe?.error) {
+      toast({
+        title: "An error occurred when saving the form",
+        description: editRecipe?.error?.message,
+        variant: "destructive",
+      });
+    }
+    if (editRecipe?.isSuccess) {
+      toast({
+        title: "Successful",
+        description: "This cocktail recipe was successfully saved",
+      });
+    }
+  }, [editRecipe?.error, editRecipe?.isSuccess]);
 
   return (
     <FormContainer title="Edit Recipe">
