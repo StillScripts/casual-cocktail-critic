@@ -26,7 +26,7 @@ export const Recipes = async () => {
                 <CardDescription>{recipe.description}</CardDescription>
               </CardHeader>
               <CardFooter className="flex items-end justify-end">
-                <RecipeActions id={recipe.id} />
+                <RecipeActions id={recipe.id} recipe={recipe} />
               </CardFooter>
             </Card>
           ))}

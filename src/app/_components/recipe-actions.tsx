@@ -14,20 +14,18 @@ import { Button } from "@/components/ui/button";
 import { TableCell } from "@/components/ui/table";
 import { toast } from "@/components/ui/use-toast";
 import { api } from "@/trpc/react";
-import {
-  Cross2Icon,
-  EyeOpenIcon,
-  Pencil2Icon,
-  StarIcon,
-} from "@radix-ui/react-icons";
+import { Cross2Icon, EyeOpenIcon, Pencil2Icon } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { AddNewReview, type Recipe } from "./add-new-review";
 
 export const RecipeActions = ({
   id,
+  recipe,
   table,
 }: {
   id: number;
+  recipe: Recipe;
   table?: boolean;
 }) => {
   const router = useRouter();
@@ -57,16 +55,7 @@ export const RecipeActions = ({
           >
             <Pencil2Icon />
           </Button>
-          <Button
-            className="text-yellow-600 hover:text-yellow-700"
-            variant="ghost"
-            size="sm"
-            onClick={() => {
-              alert("ratings coming soon");
-            }}
-          >
-            <StarIcon />
-          </Button>
+          <AddNewReview recipe={recipe} />
           <Button
             variant="ghost"
             size="sm"

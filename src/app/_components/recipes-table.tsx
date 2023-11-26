@@ -34,7 +34,7 @@ export const RecipesTable = async () => {
             <TableCell className="hidden truncate sm:block">
               {recipe.description}
             </TableCell>
-            <RecipeActions id={recipe.id} table />
+            <RecipeActions id={recipe.id} recipe={recipe} table />
           </TableRow>
         ))}
       </TableBody>
