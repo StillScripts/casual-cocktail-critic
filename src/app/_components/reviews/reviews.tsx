@@ -2,11 +2,20 @@ import Image from 'next/image'
 
 import { StarFilledIcon } from '@radix-ui/react-icons'
 
-import type { RouterOutput } from '@/server/api/root'
+import { type RecipeWithReviews } from '../recipes/types'
 
-type Reviews = RouterOutput['recipe']['getWithReviews'][number]['recipeReviews']
+import { ReviewActions } from './actions'
+import type { Reviews as ReviewsType } from './types'
 
-export const Reviews = ({ reviews }: { reviews: Reviews }) => {
+export const Reviews = ({
+	recipe,
+	reviews,
+	userId
+}: {
+	recipe: RecipeWithReviews
+	reviews: ReviewsType
+	userId: string
+}) => {
 	const getStars = (rating: number | null) => {
 		if (rating === null) return null
 
@@ -25,6 +34,7 @@ export const Reviews = ({ reviews }: { reviews: Reviews }) => {
 			outlinedStars
 		}
 	}
+
 	return (
 		<ul role="list" className="divide-y divide-gray-300">
 			{reviews.map(review => {
@@ -68,6 +78,9 @@ export const Reviews = ({ reviews }: { reviews: Reviews }) => {
 							<p className="mt-1 text-sm leading-6 text-muted-foreground">
 								{review.feedback}
 							</p>
+							{userId === review.user?.id && (
+								<ReviewActions recipe={recipe} review={review} />
+							)}
 						</div>
 					</li>
 				)

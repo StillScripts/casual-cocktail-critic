@@ -10,11 +10,15 @@ import {
 	CardHeader,
 	CardTitle
 } from '@/components/ui/card'
+import { getServerAuthSession } from '@/server/auth'
 import { api } from '@/trpc/server'
 
 export const dynamic = 'force-dynamic'
 
 const ViewRecipePage = async ({ params }: { params: { id: string } }) => {
+	const session = await getServerAuthSession()
+	if (!session?.user) return null
+
 	const recipes = await api.recipe.getWithReviews.query({
 		id: parseInt(params.id)
 	})
@@ -55,7 +59,7 @@ const ViewRecipePage = async ({ params }: { params: { id: string } }) => {
 			<div className="py-8">
 				<div className="container">
 					<h4 className="text-xl font-medium">Reviews</h4>
-					<Reviews reviews={recipe.recipeReviews} />
+					<Reviews reviews={recipe.recipeReviews} userId={session.user.id} />
 				</div>
 			</div>
 		</div>
