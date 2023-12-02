@@ -114,7 +114,11 @@ export const recipeRouter = createTRPCRouter({
         where: eq(recipes.id, input.id),
         with: {
           recipeIngredients: true,
-          recipeReviews: true,
+          recipeReviews: {
+            with: {
+              user: true,
+            },
+          },
         },
       });
     }),

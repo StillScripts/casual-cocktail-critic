@@ -6,6 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Reviews } from "@/components/ui/reviews";
 
 export const dynamic = "force-dynamic";
 
@@ -19,32 +20,35 @@ const ViewRecipePage = async ({ params }: { params: { id: string } }) => {
   }
 
   return (
-    <div className="min-h-screen p-16">
-      <Card className="mx-auto max-w-2xl">
-        <CardHeader>
-          <CardTitle>{recipe?.name}</CardTitle>
-          <CardDescription>{recipe?.description}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ul>
-            {recipe?.recipeIngredients?.map((ingredient) => (
-              <li key={ingredient.id}>
-                {ingredient.name} {ingredient.quantity}
-              </li>
-            ))}
-          </ul>
-        </CardContent>
-      </Card>
-      <ul>
-        {recipe?.recipeReviews?.map((review) => (
-          <li className="my-4" key={"review" + review.id}>
-            {review.feedback}{" "}
-            <span className="font-medium text-gray-600">
-              {review.rating}/10
-            </span>
-          </li>
-        ))}
-      </ul>
+    <div>
+      <div className="container py-8">
+        <Card className="mx-auto max-w-2xl">
+          <CardHeader>
+            <CardTitle>{recipe?.name}</CardTitle>
+            <CardDescription>{recipe?.description}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="font-medium">Ingredients:</p>
+            <ul className="ml-4 list-decimal text-sm">
+              {recipe?.recipeIngredients?.map((ingredient) => (
+                <li key={ingredient.id}>
+                  <span className="font-bold">{ingredient.name}</span>&nbsp;
+                  <span className="text-xs text-muted-foreground">
+                    ({ingredient.quantity})
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="bg-muted py-8">
+        <div className="container">
+          <h4 className="text-xl font-medium">Reviews</h4>
+          <Reviews reviews={recipe.recipeReviews} />
+        </div>
+      </div>
     </div>
   );
 };
