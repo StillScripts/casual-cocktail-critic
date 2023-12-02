@@ -173,7 +173,7 @@ export const UpdateReviewForm = ({
 					)}
 				/>
 				<SubmitButton loading={updateReviews.isLoading}>
-					Add Your Rating
+					Update Your Rating
 				</SubmitButton>
 			</form>
 		</Form>

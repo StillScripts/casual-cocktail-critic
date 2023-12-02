@@ -23,16 +23,6 @@ export const ReviewActions = ({
 
 	return (
 		<div className="no-wrap flex">
-			<Button
-				className="text-green-700 hover:text-green-800"
-				variant="ghost"
-				size="sm"
-				onClick={() => {
-					router.push(`/edit/${review.id}`)
-				}}
-			>
-				<Pencil2Icon />
-			</Button>
 			<UpdateReview recipe={recipe} review={review} />
 			{/* <DeleteRecipe id={id} /> */}
 		</div>

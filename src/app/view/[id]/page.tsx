@@ -59,7 +59,11 @@ const ViewRecipePage = async ({ params }: { params: { id: string } }) => {
 			<div className="py-8">
 				<div className="container">
 					<h4 className="text-xl font-medium">Reviews</h4>
-					<Reviews reviews={recipe.recipeReviews} userId={session.user.id} />
+					<Reviews
+						recipe={recipe}
+						reviews={recipe.recipeReviews}
+						userId={session.user.id}
+					/>
 				</div>
 			</div>
 		</div>

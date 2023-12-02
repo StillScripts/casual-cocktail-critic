@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 
-import { StarIcon } from '@radix-ui/react-icons'
+import { Pencil2Icon } from '@radix-ui/react-icons'
 
 import { type Review } from '@/app/_components/reviews/types'
 import { Button } from '@/components/ui/button'
@@ -37,11 +37,11 @@ export const UpdateReview = ({
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
 				<Button
-					className="text-yellow-600 hover:text-yellow-700"
+					className="text-green-700 hover:text-green-800"
 					variant="ghost"
 					size="sm"
 				>
-					<StarIcon />
+					<Pencil2Icon />
 				</Button>
 			</DialogTrigger>
 			<DialogContent>
