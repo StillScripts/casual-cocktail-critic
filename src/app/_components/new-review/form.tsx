@@ -89,7 +89,7 @@ export function CreateReviewForm({
                 <Input placeholder="Your rating" type="number" {...field} />
               </FormControl>
               <FormDescription>
-                Give the cocktail a rating out of 5
+                Give the cocktail a rating out of 10
               </FormDescription>
               <FormMessage />
             </FormItem>
