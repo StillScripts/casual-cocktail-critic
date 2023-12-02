@@ -1,5 +1,5 @@
 import { api } from "@/trpc/server";
-import { EditRecipeForm } from "./form";
+import { EditRecipeForm } from "@/app/_components/edit-recipe/form";
 
 export const dynamic = "force-dynamic";
 

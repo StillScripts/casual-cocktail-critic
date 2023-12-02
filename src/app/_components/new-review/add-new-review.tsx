@@ -7,7 +7,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { CreateReviewForm } from "@/app/_components/new-review/create-review-form";
+import { CreateReviewForm } from "./form";
 import { useState } from "react";
 import { StarIcon } from "@radix-ui/react-icons";
 

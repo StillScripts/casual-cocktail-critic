@@ -1,5 +1,5 @@
 import type { RouterOutput } from "@/server/api/root";
-import { StarFilledIcon, StarIcon } from "@radix-ui/react-icons";
+import { StarFilledIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 
 type Reviews =

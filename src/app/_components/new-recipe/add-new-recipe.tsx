@@ -6,7 +6,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { CreateRecipeForm } from "./create-recipe-form";
+import { CreateRecipeForm } from "./form";
 import { useState } from "react";
 
 export const AddNewRecipe = () => {
