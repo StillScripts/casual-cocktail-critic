@@ -8,7 +8,7 @@ import {
 import { getServerAuthSession } from '@/server/auth'
 import { api } from '@/trpc/server'
 
-import { RecipeActions } from './actions'
+import { RecipeActions } from './actions/toolbar'
 
 export const Recipes = async () => {
 	const session = await getServerAuthSession()
