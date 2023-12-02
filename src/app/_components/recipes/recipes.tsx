@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/card";
 import { getServerAuthSession } from "@/server/auth";
 import { api } from "@/trpc/server";
-import { RecipeActions } from "./recipe-actions";
+import { RecipeActions } from "./actions";
 
 export const Recipes = async () => {
   const session = await getServerAuthSession();

@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { RecipeActions } from "./recipe-actions";
+import { RecipeActions } from "./actions";
 import { getServerAuthSession } from "@/server/auth";
 import { api } from "@/trpc/server";
 
