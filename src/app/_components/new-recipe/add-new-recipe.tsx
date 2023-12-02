@@ -6,22 +6,20 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { CreateRecipeForm } from "@/app/_components/create-recipe-form";
-import { useEffect, useState } from "react";
+import { CreateRecipeForm } from "./create-recipe-form";
+import { useState } from "react";
 
 export const AddNewRecipe = () => {
-  const [forceClose, setForceClose] = useState(false);
-  useEffect(() => {
-    setForceClose(false);
-  }, []);
+  const [open, setOpen] = useState(false);
+
   return (
-    <Dialog open={forceClose ? false : undefined}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>Add New Cocktail Recipe</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogTitle>New Cocktail</DialogTitle>
-        <CreateRecipeForm close={() => setForceClose(true)} />
+        <CreateRecipeForm close={() => setOpen(false)} />
       </DialogContent>
     </Dialog>
   );

@@ -1,8 +1,8 @@
-import { RecipesTable } from "@/app/_components/recipes-table";
+import { RecipesTable } from "@/app/_components/recipes/recipes-table";
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { AddNewRecipe } from "@/app/_components/add-new-recipe";
-import { RecipesTableSkeleton } from "@/app/_components/recipes-table-skeleton";
+import { AddNewRecipe } from "@/app/_components/new-recipe/add-new-recipe";
+import { RecipesTableSkeleton } from "@/app/_components/recipes/recipes-table-skeleton";
 
 export const metadata: Metadata = {
   title: "Cocktails Collection",

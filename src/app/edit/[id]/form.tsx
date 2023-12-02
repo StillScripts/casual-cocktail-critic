@@ -49,7 +49,7 @@ type RecipeFormValues = z.infer<typeof recipeFormSchema>;
 export function EditRecipeForm({
   recipes,
 }: {
-  recipes: RouterOutput["recipe"]["getRecipe"];
+  recipes: RouterOutput["recipe"]["getSingle"];
 }) {
   const recipe = recipes[0];
   const editRecipe = api.recipe.update.useMutation();
@@ -200,6 +200,7 @@ export function EditRecipeForm({
                   <Button
                     className="text-red-600 hover:text-red-700"
                     variant="ghost"
+                    type="button"
                     onClick={() => {
                       if (field.recipeIngredientId) {
                         setRemoved([...removed, field.recipeIngredientId]);

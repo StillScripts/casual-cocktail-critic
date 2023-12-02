@@ -13,7 +13,7 @@ export const Recipes = async () => {
   const session = await getServerAuthSession();
   if (!session?.user) return null;
 
-  const recipes = await api.recipe.getSingles.query();
+  const recipes = await api.recipe.getRecipes.query();
 
   return (
     <div className="container">

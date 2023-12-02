@@ -17,7 +17,7 @@ import { api } from "@/trpc/react";
 import { Cross2Icon, EyeOpenIcon, Pencil2Icon } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { AddNewReview, type Recipe } from "./add-new-review";
+import { AddNewReview, type Recipe } from "../new-review/add-new-review";
 
 export const RecipeActions = ({
   id,
