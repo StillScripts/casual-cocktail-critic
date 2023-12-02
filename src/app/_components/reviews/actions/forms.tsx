@@ -21,6 +21,7 @@ import { Input } from '@/components/ui/input'
 import { SubmitButton } from '@/components/ui/submit-button'
 import { Textarea } from '@/components/ui/textarea'
 import { api } from '@/trpc/react'
+import { UploadButton } from '@/lib/utils'
 
 const reviewFormSchema = z.object({
 	feedback: z.string().min(2, {
@@ -96,6 +97,18 @@ export const CreateReviewForm = ({
 							<FormMessage />
 						</FormItem>
 					)}
+				/>
+				<UploadButton
+					endpoint="imageUploader"
+					onClientUploadComplete={res => {
+						// Do something with the response
+						console.log('Files: ', res)
+						alert('Upload Completed')
+					}}
+					onUploadError={(error: Error) => {
+						// Do something with the error.
+						alert(`ERROR! ${error.message}`)
+					}}
 				/>
 				<SubmitButton loading={createReviews.isLoading}>
 					Add Your Rating
