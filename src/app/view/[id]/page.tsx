@@ -1,5 +1,6 @@
 import Link from 'next/link'
 
+import { Reviews } from '@/app/_components/reviews/reviews'
 import { Button } from '@/components/ui/button'
 import {
 	Card,
@@ -9,7 +10,6 @@ import {
 	CardHeader,
 	CardTitle
 } from '@/components/ui/card'
-import { Reviews } from '@/components/ui/reviews'
 import { api } from '@/trpc/server'
 
 export const dynamic = 'force-dynamic'
