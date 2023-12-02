@@ -1,10 +1,10 @@
 'use client'
 
-import { type Recipe } from '@/app/_components/new-review/create-review'
-import { UpdateReview } from '@/app/_components/new-review/update-review'
+import type { Review } from '@/app/_components/reviews/types'
 
+import { type Recipe } from './create'
 import { DeleteReview } from './delete'
-import type { Review } from './types'
+import { UpdateReview } from './update'
 
 export const ReviewActions = ({
 	recipe,

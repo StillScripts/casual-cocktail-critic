@@ -7,7 +7,7 @@ import { EyeOpenIcon, Pencil2Icon } from '@radix-ui/react-icons'
 import {
 	AddNewReview,
 	type Recipe
-} from '@/app/_components/new-review/create-review'
+} from '@/app/_components/reviews/actions/create'
 import { Button } from '@/components/ui/button'
 import { TableCell } from '@/components/ui/table'
 

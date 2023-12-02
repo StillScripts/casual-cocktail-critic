@@ -2,9 +2,9 @@ import Image from 'next/image'
 
 import { StarFilledIcon } from '@radix-ui/react-icons'
 
-import { type RecipeWithReviews } from '../recipes/types'
+import { type RecipeWithReviews } from '@/app/_components/recipes/types'
 
-import { ReviewActions } from './actions'
+import { ReviewActions } from './actions/toolbar'
 import type { Reviews as ReviewsType } from './types'
 
 export const Reviews = ({
