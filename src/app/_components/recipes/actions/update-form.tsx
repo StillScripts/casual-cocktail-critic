@@ -47,7 +47,7 @@ const recipeFormSchema = z.object({
 
 type RecipeFormValues = z.infer<typeof recipeFormSchema>
 
-export function EditRecipeForm({
+export function UpdateForm({
 	recipes
 }: {
 	recipes: RouterOutput['recipe']['getSingle']

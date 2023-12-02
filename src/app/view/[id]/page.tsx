@@ -17,7 +17,6 @@ export const dynamic = 'force-dynamic'
 
 const ViewRecipePage = async ({ params }: { params: { id: string } }) => {
 	const session = await getServerAuthSession()
-	if (!session?.user) return null
 
 	const recipes = await api.recipe.getWithReviews.query({
 		id: parseInt(params.id)
@@ -48,11 +47,13 @@ const ViewRecipePage = async ({ params }: { params: { id: string } }) => {
 							))}
 						</ul>
 					</CardContent>
-					<CardFooter>
-						<Button asChild>
-							<Link href={`/edit/${recipe.id}`}>Edit Recipe</Link>
-						</Button>
-					</CardFooter>
+					{session?.user?.id === recipe.createdById && (
+						<CardFooter>
+							<Button asChild>
+								<Link href={`/edit/${recipe.id}`}>Edit Recipe</Link>
+							</Button>
+						</CardFooter>
+					)}
 				</Card>
 			</div>
 
@@ -62,7 +63,7 @@ const ViewRecipePage = async ({ params }: { params: { id: string } }) => {
 					<Reviews
 						recipe={recipe}
 						reviews={recipe.recipeReviews}
-						userId={session.user.id}
+						userId={session?.user?.id ?? 'unauthorised'}
 					/>
 				</div>
 			</div>

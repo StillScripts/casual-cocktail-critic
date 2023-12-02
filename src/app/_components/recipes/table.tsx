@@ -8,9 +8,10 @@ import {
 	TableHeader,
 	TableRow
 } from '@/components/ui/table'
-import { RecipeActions } from './actions/toolbar'
 import { getServerAuthSession } from '@/server/auth'
 import { api } from '@/trpc/server'
+
+import { RecipeActions } from './actions/toolbar'
 
 export const RecipesTable = async () => {
 	const session = await getServerAuthSession()
@@ -34,7 +35,12 @@ export const RecipesTable = async () => {
 						<TableCell className="hidden truncate sm:block">
 							{recipe.description}
 						</TableCell>
-						<RecipeActions id={recipe.id} recipe={recipe} table />
+						<RecipeActions
+							id={recipe.id}
+							recipe={recipe}
+							table
+							belongsToUser={session.user?.id === recipe.createdById}
+						/>
 					</TableRow>
 				))}
 			</TableBody>

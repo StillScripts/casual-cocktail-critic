@@ -1,4 +1,4 @@
-import { EditRecipeForm } from '@/app/_components/edit-recipe/form'
+import { UpdateForm } from '@/app/_components/recipes/actions/update-form'
 import { api } from '@/trpc/server'
 
 export const dynamic = 'force-dynamic'
@@ -12,7 +12,7 @@ const EditRecipePage = async ({ params }: { params: { id: string } }) => {
 	return (
 		<div className="bg-muted">
 			<div className="container min-h-screen py-16">
-				<EditRecipeForm recipes={recipes} />
+				<UpdateForm recipes={recipes} />
 			</div>
 		</div>
 	)

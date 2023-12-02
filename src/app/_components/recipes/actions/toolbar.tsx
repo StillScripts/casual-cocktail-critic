@@ -16,11 +16,13 @@ import { DeleteRecipe } from './delete'
 export const RecipeActions = ({
 	id,
 	recipe,
-	table
+	table,
+	belongsToUser
 }: {
 	id: number
 	recipe: Recipe
 	table?: boolean
+	belongsToUser?: boolean
 }) => {
 	const router = useRouter()
 
@@ -30,6 +32,7 @@ export const RecipeActions = ({
 				className="text-green-700 hover:text-green-800"
 				variant="ghost"
 				size="sm"
+				disabled={!belongsToUser}
 				onClick={() => {
 					router.push(`/edit/${id}`)
 				}}
@@ -46,7 +49,7 @@ export const RecipeActions = ({
 			>
 				<EyeOpenIcon />
 			</Button>
-			<DeleteRecipe id={id} />
+			<DeleteRecipe id={id} belongsToUser={belongsToUser} />
 		</div>
 	)
 	if (table) {

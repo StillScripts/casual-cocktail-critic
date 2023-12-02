@@ -19,7 +19,13 @@ import { Button } from '@/components/ui/button'
 import { toast } from '@/components/ui/use-toast'
 import { api } from '@/trpc/react'
 
-export const DeleteRecipe = ({ id }: { id: number }) => {
+export const DeleteRecipe = ({
+	id,
+	belongsToUser
+}: {
+	id: number
+	belongsToUser?: boolean
+}) => {
 	const router = useRouter()
 	const deleteRecipe = api.recipe.delete.useMutation()
 
@@ -39,6 +45,7 @@ export const DeleteRecipe = ({ id }: { id: number }) => {
 					className="text-red-600 hover:text-red-700"
 					variant="ghost"
 					size="sm"
+					disabled={!belongsToUser}
 				>
 					<Cross2Icon />
 				</Button>
@@ -52,7 +59,10 @@ export const DeleteRecipe = ({ id }: { id: number }) => {
 				</AlertDialogHeader>
 				<AlertDialogFooter>
 					<AlertDialogCancel>Cancel</AlertDialogCancel>
-					<AlertDialogAction onClick={() => deleteRecipe.mutate({ id })}>
+					<AlertDialogAction
+						disabled={!belongsToUser}
+						onClick={() => deleteRecipe.mutate({ id })}
+					>
 						Delete
 					</AlertDialogAction>
 				</AlertDialogFooter>

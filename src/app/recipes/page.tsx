@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 const RecipesPage = () => {
 	return (
-		<main className="container flex min-h-screen flex-col items-center justify-center py-16">
+		<main className="container flex min-h-screen flex-col items-center justify-start py-32">
 			<div className="mb-12 flex w-full flex-col items-center justify-between sm:flex-row sm:items-end">
 				<h1 className="mb-6 text-3xl font-extrabold tracking-tight sm:mb-0 sm:text-4xl">
 					Cocktail Collection
