@@ -19,19 +19,19 @@ import { Button } from '@/components/ui/button'
 import { toast } from '@/components/ui/use-toast'
 import { api } from '@/trpc/react'
 
-export const DeleteRecipe = ({ id }: { id: number }) => {
+export const DeleteReview = ({ id }: { id: number }) => {
 	const router = useRouter()
-	const deleteRecipe = api.recipe.delete.useMutation()
+	const deleteReview = api.review.delete.useMutation()
 
 	useEffect(() => {
-		if (deleteRecipe?.isSuccess) {
+		if (deleteReview?.isSuccess) {
 			toast({
 				title: 'Succesful deletion',
-				description: 'This cocktail recipe was successfully deleted'
+				description: 'Your review was successfully deleted'
 			})
 			router.refresh()
 		}
-	}, [deleteRecipe?.isSuccess, router])
+	}, [deleteReview?.isSuccess, router])
 	return (
 		<AlertDialog>
 			<AlertDialogTrigger asChild>
@@ -47,12 +47,12 @@ export const DeleteRecipe = ({ id }: { id: number }) => {
 				<AlertDialogHeader>
 					<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
 					<AlertDialogDescription>
-						This action will delete this cocktail recipe.
+						This action will delete this review.
 					</AlertDialogDescription>
 				</AlertDialogHeader>
 				<AlertDialogFooter>
 					<AlertDialogCancel>Cancel</AlertDialogCancel>
-					<AlertDialogAction onClick={() => deleteRecipe.mutate({ id })}>
+					<AlertDialogAction onClick={() => deleteReview.mutate({ id })}>
 						Delete
 					</AlertDialogAction>
 				</AlertDialogFooter>

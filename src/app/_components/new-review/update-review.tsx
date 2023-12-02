@@ -37,7 +37,7 @@ export const UpdateReview = ({
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
 				<Button
-					className="text-green-700 hover:text-green-800"
+					className="pl-0 text-green-700 hover:text-green-800"
 					variant="ghost"
 					size="sm"
 				>
