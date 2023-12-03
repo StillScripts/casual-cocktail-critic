@@ -8,5 +8,5 @@ export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs))
 }
 
-export const { UploadButton, UploadDropzone, Uploader } =
-	generateComponents<OurFileRouter>()
+// export const { UploadButton, UploadDropzone, Uploader } =
+// 	generateComponents<OurFileRouter>()

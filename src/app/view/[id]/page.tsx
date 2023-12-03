@@ -35,17 +35,21 @@ const ViewRecipePage = async ({ params }: { params: { id: string } }) => {
 						<CardDescription>{recipe?.description}</CardDescription>
 					</CardHeader>
 					<CardContent>
-						<p className="font-medium">Ingredients:</p>
-						<ul className="ml-4 list-decimal text-sm">
-							{recipe?.recipeIngredients?.map(ingredient => (
-								<li key={ingredient.id}>
-									<span className="font-bold">{ingredient.name}</span>&nbsp;
-									<span className="text-xs text-muted-foreground">
-										({ingredient.quantity})
-									</span>
-								</li>
-							))}
-						</ul>
+						{recipe?.recipeIngredients?.length > 0 && (
+							<>
+								<p className="font-medium">Ingredients:</p>
+								<ul className="ml-4 list-decimal text-sm">
+									{recipe?.recipeIngredients?.map(ingredient => (
+										<li key={ingredient.id}>
+											<span className="font-bold">{ingredient.name}</span>&nbsp;
+											<span className="text-xs text-muted-foreground">
+												({ingredient.quantity})
+											</span>
+										</li>
+									))}
+								</ul>
+							</>
+						)}
 					</CardContent>
 					{session?.user?.id === recipe.createdById && (
 						<CardFooter>
