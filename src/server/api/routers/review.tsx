@@ -10,13 +10,15 @@ export const reviewRouter = createTRPCRouter({
 			z.object({
 				feedback: z.string().min(2),
 				rating: z.number(),
+				image: z.string().optional(),
 				recipeId: z.number()
 			})
 		)
-		.mutation(async ({ ctx, input: { feedback, rating, recipeId } }) => {
+		.mutation(async ({ ctx, input: { feedback, rating, image, recipeId } }) => {
 			await ctx.db.insert(recipeReviews).values({
 				feedback,
 				rating,
+				image,
 				recipeId,
 				createdById: ctx.session.user.id
 			})
@@ -26,14 +28,15 @@ export const reviewRouter = createTRPCRouter({
 			z.object({
 				feedback: z.string().min(2),
 				rating: z.number(),
+				image: z.string().optional(),
 				id: z.number()
 			})
 		)
-		.mutation(async ({ ctx, input: { feedback, rating, id } }) => {
+		.mutation(async ({ ctx, input: { feedback, rating, image, id } }) => {
 			// Update the recipe
 			await ctx.db
 				.update(recipeReviews)
-				.set({ feedback, rating })
+				.set({ feedback, rating, image })
 				.where(eq(recipeReviews.id, id))
 		}),
 	delete: protectedProcedure
