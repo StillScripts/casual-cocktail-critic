@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client'
 
 import { useEffect } from 'react'
@@ -20,6 +21,8 @@ import {
 import { Input } from '@/components/ui/input'
 import { SubmitButton } from '@/components/ui/submit-button'
 import { Textarea } from '@/components/ui/textarea'
+import { UploadButton } from '@/lib/uploadthing'
+import { cn } from '@/lib/utils'
 import { api } from '@/trpc/react'
 
 const reviewFormSchema = z.object({
@@ -29,7 +32,8 @@ const reviewFormSchema = z.object({
 	rating: z.coerce
 		.number()
 		.gte(1, { message: 'The rating must be between 1 and 10' })
-		.lte(10, { message: 'The rating must be between 1 and 10' })
+		.lte(10, { message: 'The rating must be between 1 and 10' }),
+	image: z.string().optional()
 })
 
 type ReviewFormValues = z.infer<typeof reviewFormSchema>
@@ -51,6 +55,7 @@ export const CreateReviewForm = ({
 		createReviews.mutate({
 			feedback: data.feedback,
 			rating: parseFloat(`${data.rating}`),
+			image: data.image,
 			recipeId
 		})
 	}
@@ -97,6 +102,37 @@ export const CreateReviewForm = ({
 						</FormItem>
 					)}
 				/>
+				<FormField
+					control={form.control}
+					name="image"
+					render={({ field }) => (
+						<Input className="hidden" {...field} value={field.value ?? ''} />
+					)}
+				/>
+				<div className="rounded-xl p-4 shadow">
+					<div>
+						<p className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+							Upload an image
+						</p>
+						<div className={cn(form.watch('image') ? 'py-2' : 'hidden')}>
+							<img
+								className="h-auto w-8"
+								src={form.watch('image')}
+								alt="your image"
+							/>
+						</div>
+					</div>
+					<UploadButton
+						endpoint="imageUploader"
+						onClientUploadComplete={res => {
+							form.setValue('image', res[0]?.url ?? '')
+						}}
+						onUploadError={(error: Error) => {
+							// Do something with the error.
+							alert(`ERROR! ${error.message}`)
+						}}
+					/>
+				</div>
 				<SubmitButton loading={createReviews.isLoading}>
 					Add Your Rating
 				</SubmitButton>
@@ -118,7 +154,8 @@ export const UpdateReviewForm = ({
 		resolver: zodResolver(reviewFormSchema),
 		defaultValues: {
 			feedback: review?.feedback ?? '',
-			rating: review?.rating ?? undefined
+			rating: review?.rating ?? undefined,
+			image: review?.image ?? ''
 		}
 	})
 
@@ -126,6 +163,7 @@ export const UpdateReviewForm = ({
 		updateReviews.mutate({
 			feedback: data.feedback,
 			rating: parseFloat(`${data.rating}`),
+			image: data.image,
 			id: review.id!
 		})
 	}
@@ -172,6 +210,30 @@ export const UpdateReviewForm = ({
 						</FormItem>
 					)}
 				/>
+				<div className="rounded-xl p-4 shadow">
+					<div>
+						<p className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+							Upload an image
+						</p>
+						<div className={cn(form.watch('image') ? 'py-2' : 'hidden')}>
+							<img
+								className="h-auto w-8"
+								src={form.watch('image')}
+								alt="your image"
+							/>
+						</div>
+					</div>
+					<UploadButton
+						endpoint="imageUploader"
+						onClientUploadComplete={res => {
+							form.setValue('image', res[0]?.url ?? '')
+						}}
+						onUploadError={(error: Error) => {
+							// Do something with the error.
+							alert(`ERROR! ${error.message}`)
+						}}
+					/>
+				</div>
 				<SubmitButton loading={updateReviews.isLoading}>
 					Update Your Rating
 				</SubmitButton>

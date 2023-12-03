@@ -50,7 +50,7 @@ export const Reviews = ({
 								width={48}
 							/>
 						)}
-						<div className="max-w-xl flex-auto">
+						<div className="max-w-lg flex-auto xl:max-w-xl">
 							<div className="flex items-baseline justify-between gap-x-4">
 								<p className="font-semibold leading-6 text-gray-900">
 									{review.user.name}
@@ -78,6 +78,15 @@ export const Reviews = ({
 							<p className="mt-1 text-sm leading-6 text-muted-foreground">
 								{review.feedback}
 							</p>
+							{review.image && (
+								<Image
+									className="max-w-full"
+									src={review.image}
+									width={200}
+									height={200}
+									alt="Cocktail image"
+								/>
+							)}
 							{userId === review.user?.id && (
 								<ReviewActions recipe={recipe} review={review} />
 							)}
