@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { cookies } from 'next/headers'
 
@@ -16,10 +17,11 @@ const inter = Inter({
 	variable: '--font-sans'
 })
 
-export const metadata = {
+export const metadata: Metadata = {
 	title: 'Casual Cocktail Critic',
-	description: 'Rate cocktail recipes',
-	icons: [{ rel: 'icon', url: '/favicon.ico' }]
+	description: 'Store cocktail recipes and rate your experiences.',
+	icons: [{ rel: 'icon', url: '/favicon.ico' }],
+	manifest: '/manifest.json'
 }
 
 export default function RootLayout({
